@@ -19,6 +19,9 @@ class SplashScreenActivity:AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+//      Show splash screen for 1.5 seconds
+//      Start LoginActivity if the user is not logged in
+//      Start ProfileActivity otherwise
         Handler().postDelayed({
             val currentUser = auth.currentUser
             if (currentUser == null) {
@@ -32,19 +35,20 @@ class SplashScreenActivity:AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
+//      Sign the current user out when activity is destroy
         auth.signOut()
     }
 
     private fun startLoginActivity() {
+//      Set mapping to start LoginActivity
         val intent = Intent(this, LoginActivity::class.java)
-
         startActivity(intent)
         finish()
     }
 
     private fun startProfileActivity() {
+//      Set mapping to start ProfileActivity
         val intent = Intent(this, ProfileActivity::class.java)
-
         startActivity(intent)
         finish()
     }

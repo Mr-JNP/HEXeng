@@ -17,17 +17,17 @@ class CompleteActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.complete_activity)
 
-       val score = intent.extras?.getInt("total-score")
-
+//      Get the user's total score and update the textview.
+        val score = intent.extras?.getInt("total-score")
         total_score.text = score.toString()
 
         setupButton()
 
+//      Get an instance of FirebaseAuth retreive the current user's detail
         auth = FirebaseAuth.getInstance()
-
         var user = auth.currentUser
 
-
+//      Increment user's total score in Firebase DB
         db.collection("Users").whereEqualTo("uid",user?.uid)
             .get().addOnSuccessListener { users ->
                for(user in users) {
@@ -41,7 +41,8 @@ class CompleteActivity: AppCompatActivity() {
     }
 
     private fun setupButton() {
+//      Map the button to redirect to ProfileActivity when clicked.
         var intent = Intent(this, ProfileActivity::class.java)
-       back_to_profile!!.setOnClickListener { startActivity(intent) }
+        back_to_profile!!.setOnClickListener { startActivity(intent) }
     }
 }

@@ -18,9 +18,11 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.game_activity)
 
+//      Get the vocab list from the previous activity
         val vocabList = intent.extras?.getParcelableArrayList<Vocab>("vocabList")
 
 
+//      Choose 20 random vocabs
         for (i in 1..20) {
             var vocab = vocabList?.let { randomVocab(it) }
 
@@ -29,9 +31,12 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
+//      Set up game
         setupView()
 
+//      Set up event listener on the choice button
         choice_one.setOnClickListener {
+//          If correct add score to total score.
             if (evaluate(targetVocab.meaning.toString(),choice_one_text.text as String)) {
                 totalscore += 10
                 update()
@@ -70,22 +75,28 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+//  Set up game
     private fun setupView() {
         setupQuestion()
     }
 
     private fun setupQuestion() {
 
+//      Get a list of random vocab questions
         targetVocab = this.randomVocab(randomVocabList)
 
         question.text = targetVocab.word
         val choiceList = ArrayList<String>()
 
+//      Get a list of correct answers
         targetVocab.meaning?.let { choiceList.add(it) }
+//      Get lists of dummy answers
         this.randomVocab(randomVocabList).meaning?.let { choiceList.add(it) }
         this.randomVocab(randomVocabList).meaning?.let { choiceList.add(it) }
         this.randomVocab(randomVocabList).meaning?.let { choiceList.add(it) }
 
+//      Set up choices for each questions
+//      Update textviews
         when(round) {
             0 -> {
                 choice_one_text.text   = choiceList[1]
@@ -152,6 +163,7 @@ class GameActivity : AppCompatActivity() {
         choiceList.clear()
     }
 
+//  If if the answer is correct
     private fun evaluate(targetMeaning: String,choiceMeaning:String): Boolean {
         return targetMeaning == choiceMeaning
     }
@@ -159,15 +171,19 @@ class GameActivity : AppCompatActivity() {
 
     private fun update() {
         round++
+//      Loop the game until round 10
         if (round < 10){
             score.text = totalscore.toString()
+//          Update the question
             setupQuestion()
         } else {
+//          Start CompleteActivity, and pass total-score to the next activity
             startActivity(Intent(this,CompleteActivity::class.java).putExtra("total-score",totalscore))
             finish()
         }
     }
 
+//  Random a vocab from a list
     private fun randomVocab(vocabList: ArrayList<Vocab>): Vocab {
         return vocabList.random()
     }

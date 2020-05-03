@@ -33,18 +33,23 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     private fun initialise() {
+//      Create an instance of FirebaseAuth
+//      Set mapping to invoke createNewAccount() when clicked
         mAuth = FirebaseAuth.getInstance()
         btn_register!!.setOnClickListener { createNewAccount() }
     }
 
     private fun createNewAccount(){
+//      Get inputs from edit text
         firstName = et_first_name?.text.toString()
         lastName = et_last_name?.text.toString()
         email = et_email?.text.toString()
         password = et_password?.text.toString()
 
+//      Check for empty input
         if (!TextUtils.isEmpty(firstName) && !TextUtils.isEmpty(lastName)
             && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+//          Authentication process
             mAuth!!
                 .createUserWithEmailAndPassword(email!!, password!!)
                 .addOnCompleteListener(this) { task ->
@@ -53,8 +58,10 @@ class RegistrationActivity : AppCompatActivity() {
                         Log.d(TAG, "createUserWithEmail:success")
                         val userId = mAuth!!.currentUser!!.uid
 
+//                      Send email verification
                         verifyEmail();
 
+//                      Initialize user object
                         val user = hashMapOf(
                             "uid" to userId,
                             "firstname" to firstName,
@@ -63,6 +70,7 @@ class RegistrationActivity : AppCompatActivity() {
                             "score" to 0
                         )
 
+//                      Insert user object to FirebaseDB
                         db.collection("Users")
                             .add(user)
                             .addOnSuccessListener { documentReference ->
@@ -72,6 +80,7 @@ class RegistrationActivity : AppCompatActivity() {
                                 Log.w(TAG, "Error adding document", e)
                             }
 
+//                      Render new interface
                         updateUserInfoAndUI()
                     } else {
 
@@ -85,7 +94,7 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     private fun updateUserInfoAndUI() {
-
+//      Set mapping to start LoginActivity
         val intent = Intent(this, LoginActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
@@ -93,6 +102,7 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     private fun verifyEmail() {
+//      Send email verification to the input email account
         val mUser = mAuth!!.currentUser;
         mUser!!.sendEmailVerification()
             .addOnCompleteListener(this) { task ->

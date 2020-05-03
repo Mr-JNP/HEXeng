@@ -22,8 +22,10 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun initialise() {
+//      Get the detail of the current user
         val user = FirebaseAuth.getInstance().currentUser
 
+//      If the user exists, update the text view.
         if (user != null) {
             db.collection("Users").whereEqualTo("uid",user.uid).get().addOnSuccessListener {users ->
                 for( user in users) {
@@ -34,6 +36,7 @@ class ProfileActivity : AppCompatActivity() {
         }
 
 
+//      Set mapping to start CategoryActivity when clicked.
         btn_start!!.setOnClickListener { startActivity(
                 Intent(this@ProfileActivity,
                     CategoryActivity::class.java)

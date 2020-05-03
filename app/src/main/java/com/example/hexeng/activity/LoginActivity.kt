@@ -23,7 +23,6 @@ class LoginActivity : AppCompatActivity() {
 
     private var mAuth: FirebaseAuth? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
@@ -32,27 +31,33 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initialise() {
+//      Create an instance of FirebaseAuth
         mAuth = FirebaseAuth.getInstance()
 
+//      Set mapping to the register
         btn_register_account!!
             .setOnClickListener { startActivity(
                 Intent(this,
                 RegistrationActivity::class.java)
             ) }
-
+//      Set mapping to the login button
         btn_login!!.setOnClickListener { loginUser() }
     }
 
     private fun loginUser() {
+//      Get the email, password from edit text
         email = et_email?.text.toString()
         password = et_password?.text.toString()
 
+//      Check if the inputs are empty or not
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
 
+//          Perform authentication using Firebase Auth
             mAuth!!.signInWithEmailAndPassword(email!!, password!!)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "signInWithEmail:success")
+//                      Render the new view after successfully logged in
                         updateUI()
                     } else {
                         Log.e(TAG, "signInWithEmail:failure", task.exception)
@@ -65,8 +70,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun updateUI() {
+//      Start UserProfile activity after invoke
         val intent = Intent(this, ProfileActivity::class.java)
-
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
         finish()

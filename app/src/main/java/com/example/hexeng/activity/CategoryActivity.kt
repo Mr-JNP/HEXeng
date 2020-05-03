@@ -21,7 +21,6 @@ class CategoryActivity : AppCompatActivity() {
     private var firestoreListener: ListenerRegistration? = null
     private var listCategory = ArrayList<Category>()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.category_activity)
@@ -29,14 +28,17 @@ class CategoryActivity : AppCompatActivity() {
         item_list.layoutManager = LinearLayoutManager(this)
         item_list.adapter = mAdapter
 
+//      Retrieve an instance of Firebase DB
         firestoreDB = FirebaseFirestore.getInstance()
 
+//      Add the categories retrieve from Firebase DB snapshot and render new view
         firestoreListener = firestoreDB!!.collection("Category")
                             .addSnapshotListener(EventListener{snapshots, e ->
                                 if(e != null) {
                                     Log.w("thisis", "error",e)
                                 }
 
+//                              Create recycle view of Categories
                                 if (snapshots != null) {
                                     for(cat in snapshots.documents) {
                                         val categoryInfo = cat.data
@@ -45,6 +47,7 @@ class CategoryActivity : AppCompatActivity() {
                                             this.addCategory(id, categoryInfo)
                                         }
                                     }
+//                                  Update recycle view
                                     mAdapter.update(listCategory)
                                 }
                             })
@@ -57,6 +60,7 @@ class CategoryActivity : AppCompatActivity() {
     }
 
     private fun addCategory(id:String,categoryInfo:MutableMap<String,Any>) {
+//      Add category object retrieved from Firebase DB to a list of categories.
         listCategory.add(
             Category(
                 id,
